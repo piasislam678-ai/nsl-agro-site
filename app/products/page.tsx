@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,29 +21,46 @@ const products = [
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen flex flex-col items-center p-8 bg-gray-50">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
-        Our Products
-      </h1>
+    <>
+      {/* ✅ Google Logo / SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "NSL Agro Firm",
+            "url": "https://nsl-agro.vercel.app/",
+            "logo": "https://nsl-agro.vercel.app/logo.png"
+          }),
+        }}
+      />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {products.map((product, index) => (
-          <Link key={index} href="/products">
-            <div className="flex flex-col items-center cursor-pointer bg-white p-4 rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={250}
-                height={250}
-                className="rounded-lg"
-              />
-              <h2 className="mt-4 text-xl font-semibold text-gray-700 text-center">
-                {product.name}
-              </h2>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </main>
+      {/* ✅ Your Homepage UI */}
+      <main className="min-h-screen flex flex-col items-center p-8 bg-gray-50">
+        <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+          Our Products
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {products.map((product, index) => (
+            <Link key={index} href="/products">
+              <div className="flex flex-col items-center cursor-pointer bg-white p-4 rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={250}
+                  height={250}
+                  className="rounded-lg"
+                />
+                <h2 className="mt-4 text-xl font-semibold text-gray-700 text-center">
+                  {product.name}
+                </h2>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </main>
+    </>
   );
 }

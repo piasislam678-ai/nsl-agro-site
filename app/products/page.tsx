@@ -60,6 +60,18 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
+
+        {/* ✅ Step 2: Facebook Button */}
+        <div className="mt-10 text-center">
+          <a
+            href="https://www.facebook.com/share/1CWzeybtJa/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition"
+          >
+            Visit our Facebook Page
+          </a>
+        </div>
       </main>
     </>
   );

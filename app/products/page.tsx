@@ -22,7 +22,7 @@ const products = [
 export default function HomePage() {
   return (
     <>
-      {/* ✅ Google Logo / SEO */}
+      {/* ✅ Google SEO Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -36,7 +36,7 @@ export default function HomePage() {
         }}
       />
 
-      {/* ✅ Your Homepage UI */}
+      {/* ✅ Homepage UI */}
       <main className="min-h-screen flex flex-col items-center p-8 bg-gray-50">
         <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
           Our Products
@@ -52,6 +52,7 @@ export default function HomePage() {
                   width={250}
                   height={250}
                   className="rounded-lg"
+                  loading="eager" // Fix for LCP warning
                 />
                 <h2 className="mt-4 text-xl font-semibold text-gray-700 text-center">
                   {product.name}
@@ -61,7 +62,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* ✅ Step 2: Facebook Button */}
+        {/* ✅ Facebook Button */}
         <div className="mt-10 text-center">
           <a
             href="https://www.facebook.com/share/1CWzeybtJa/"

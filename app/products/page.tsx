@@ -36,7 +36,7 @@ export default function HomePage() {
         }}
       />
 
-      {/* ✅ Homepage UI */}
+      {/* ✅ Homepage */}
       <main className="min-h-screen flex flex-col items-center p-8 bg-gray-50">
         <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
           Our Products
@@ -52,7 +52,7 @@ export default function HomePage() {
                   width={250}
                   height={250}
                   className="rounded-lg"
-                  loading="eager" // Fix for LCP warning
+                  loading="eager" // LCP fix
                 />
                 <h2 className="mt-4 text-xl font-semibold text-gray-700 text-center">
                   {product.name}
@@ -61,19 +61,23 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-
-        {/* ✅ Facebook Button */}
-        <div className="mt-10 text-center">
-          <a
-            href="https://www.facebook.com/share/1CWzeybtJa/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition"
-          >
-            Visit our Facebook Page
-          </a>
-        </div>
       </main>
+
+      {/* ✅ Floating Facebook Button */}
+      <a
+        href="https://www.facebook.com/profile.php?id=61575425881245"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-4 rounded-full shadow-lg flex items-center justify-center transition"
+        title="Visit our Facebook Page"
+      >
+        <Image
+          src="/facebook-icon.png" // Add a small FB icon in public folder
+          alt="Facebook"
+          width={24}
+          height={24}
+        />
+      </a>
     </>
   );
 }

@@ -52,7 +52,7 @@ export default function HomePage() {
                   width={250}
                   height={250}
                   className="rounded-lg"
-                  loading="eager" // LCP fix
+                  loading="eager"
                 />
                 <h2 className="mt-4 text-xl font-semibold text-gray-700 text-center">
                   {product.name}
@@ -65,19 +65,14 @@ export default function HomePage() {
 
       {/* ✅ Floating Facebook Button */}
       <a
-        href="https://www.facebook.com/profile.php?id=61575425881245"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-4 rounded-full shadow-lg flex items-center justify-center transition"
-        title="Visit our Facebook Page"
-      >
-        <Image
-          src="/facebook-icon.png" // Add a small FB icon in public folder
-          alt="Facebook"
-          width={24}
-          height={24}
-        />
-      </a>
+  href="https://www.facebook.com/profile.php?id=61575425881245"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg font-semibold z-50 transition-all"
+  title="Visit our Facebook Page"
+>
+  Facebook
+</a>
     </>
   );
 }

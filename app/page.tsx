@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
 
-export default function Page() {
+import React, { useState } from "react";
+import Image from "next/image";
+
+export default function HomePage() {
   const whatsappNumber = "8801922318506";
   const [cart, setCart] = useState<string[]>([]);
 
@@ -16,15 +18,21 @@ export default function Page() {
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`);
   };
 
+  // 1️⃣ Products array with local images
   const products = [
-    { name: "Fresh Cow Milk", img: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b" },
-    { name: "Ghee", img: "https://images.unsplash.com/photo-1604908177522-040a7b1e0b7d" },
-    { name: "Paneer", img: "https://images.unsplash.com/photo-1625944525533-473f1f0c38b0" },
-    { name: "Curd & Yogurt", img: "https://images.unsplash.com/photo-1604909052743-94e838986d24" },
-    { name: "Rasgulla", img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7" },
-    { name: "Sandesh", img: "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f" },
-    { name: "Rasmalai", img: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976" },
-    { name: "Chamcham", img: "https://images.unsplash.com/photo-1645177628172-a94c1f96c9db" },
+    { name: "Milk Barfi", img: "/products/product1.jpg" },
+    { name: "Shahi Jalebi", img: "/products/product2.jpg" },
+    { name: "Sweet Boondi", img: "/products/product3.jpg" },
+    { name: "Motichur Laddu", img: "/products/product4.jpg" },
+    { name: "Regular Sweets", img: "/products/product5.jpg" },
+    { name: "Cham Cham", img: "/products/product6.jpg" },
+    { name: "Rasmalai", img: "/products/product7.jpg" },
+    { name: "Sandesh", img: "/products/product8.jpg" },
+    { name: "Rasgulla", img: "/products/product9.jpg" },
+    { name: "Curd & Yogurt", img: "/products/product10.jpg" },
+    { name: "Paneer", img: "/products/product11.jpg" },
+    { name: "Ghee", img: "/products/product12.jpg" },
+    { name: "Fresh Milk", img: "/products/product13.jpg" },
   ];
 
   return (
@@ -41,11 +49,17 @@ export default function Page() {
         <p className="text-xl text-gray-700">Premium dairy & Bengali sweets delivered in Khulna</p>
       </section>
 
-      {/* Products Grid */}
-      <section className="p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {/* 2️⃣ Products Grid */}
+      <section className="p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((p, i) => (
           <div key={i} className="border rounded-xl shadow-md overflow-hidden hover:scale-105 transition-transform duration-300">
-            <img src={p.img} alt={p.name} className="h-40 w-full object-cover" />
+            <Image
+              src={p.img}
+              alt={p.name}
+              width={250}
+              height={250}
+              className="h-40 w-full object-cover"
+            />
             <div className="p-4 text-center">
               <h3 className="font-semibold text-lg">{p.name}</h3>
               <button

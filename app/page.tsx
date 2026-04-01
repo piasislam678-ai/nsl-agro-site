@@ -1,9 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { FaFacebookF, FaWhatsapp, FaTrash } from "react-icons/fa";
-import { useState } from "react";
+import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
 
 const products = [
   { id: 1, name: "Milk Barfi", image: "/products/product1.jpg", price: 500, unit: "per kg" },
@@ -24,90 +23,154 @@ const products = [
 export default function HomePage() {
   const [cart, setCart] = useState<any[]>([]);
   const [quantities, setQuantities] = useState<any>({});
+  const [showCart, setShowCart] = useState(false);
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: "",
+    contact: "",
+    email: "",
+    address: "",
+  });
 
-  const handleQuantityChange = (id: number, value: string) => {
-    setQuantities({
-      ...quantities,
-      [id]: parseFloat(value),
-    });
+  // Initialize quantities
+  useEffect(() => {
+    const initialQuantities: any = {};
+    products.forEach(p => (initialQuantities[p.id] = 1));
+    setQuantities(initialQuantities);
+  }, []);
+
+  // Handle input change in form
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value });
   };
 
-  const addToCart = (product: any) => {
-    const qty = quantities[product.id] || 1;
-    const existing = cart.find((item) => item.id === product.id);
+  // Handle form submission
+  const handleOrderSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    console.log("Order submitted:", { customer: customerInfo, cart, total });
+    alert("Thank you! Your order has been submitted.");
+
+    // Reset state
+    setCart([]);
+    setShowCart(false);
+    setShowCheckoutForm(false);
+    setCustomerInfo({ name: "", contact: "", email: "", address: "" });
+  };
+
+  // Save cart in localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("cart");
+    if (saved) setCart(JSON.parse(saved));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // Handle quantity change
+  const handleQuantityChange = (id: number, value: string) => {
+    const qty = parseFloat(value);
+    setQuantities({ ...quantities, [id]: qty });
+
+    const existing = cart.find(item => item.id === id);
     if (existing) {
-      setCart(cart.map(item =>
-        item.id === product.id
-          ? { ...item, qty: item.qty + qty, total: (item.qty + qty) * item.price }
-          : item
-      ));
-    } else {
-      setCart([...cart, { ...product, qty: qty, total: product.price * qty }]);
+      setCart(
+        cart.map(item =>
+          item.id === id ? { ...item, qty, total: qty * item.price } : item
+        )
+      );
     }
   };
 
-  const removeFromCart = (id: number) => {
-    setCart(cart.filter(item => item.id !== id));
+  // Add product to cart
+  const addToCart = (product: any) => {
+    setShowCart(true);
+
+    const qty = quantities[product.id] || 1;
+    const existing = cart.find(i => i.id === product.id);
+
+    if (existing) {
+      setCart(
+        cart.map(i =>
+          i.id === product.id
+            ? { ...i, qty: i.qty + qty, total: (i.qty + qty) * i.price }
+            : i
+        )
+      );
+    } else {
+      setCart([...cart, { ...product, qty, total: product.price * qty }]);
+    }
   };
+
+  const removeFromCart = (id: number) => setCart(cart.filter(i => i.id !== id));
 
   const total = cart.reduce((sum, item) => sum + item.total, 0);
 
   const generateWhatsAppLink = () => {
-    let message = "🛒 Order from NSL Agro Firm:%0A%0A";
+    let message = "🛒 Order from NSL AGRO:%0A%0A";
     cart.forEach(item => {
       message += `• ${item.name}%0AQty: ${item.qty} kg%0APrice: ৳${item.total}%0A%0A`;
     });
-    message += `Total: ৳${total}%0A`;
-    message += `Payment via bKash or Bank Transfer`;
+    message += `Total: ৳${total}`;
     return `https://wa.me/8801922318506?text=${message}`;
   };
 
   return (
-    <main className="bg-black text-white">
-
+    <main className="bg-[#f8fafc] text-[#0f172a] font-sans">
       {/* Navbar */}
-      <header className="bg-black border-b border-pink-400 p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-pink-400">NSL Agro Firm</h1>
-        <nav className="space-x-6">
-          <a href="#" className="hover:text-purple-300">Home</a>
-          <a href="#products" className="hover:text-purple-300">Products</a>
-          <a href="#wholesale" className="hover:text-purple-300">Wholesale</a>
-          <a href="#contact" className="hover:text-purple-300">Contact</a>
-        </nav>
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 p-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+        <h1 className="text-2xl font-bold text-gray-900">NSL AGRO</h1>
+        <div className="flex items-center gap-4">
+          <nav className="space-x-4 hidden md:block">
+            <a href="#" className="hover:text-blue-600 transition">Home</a>
+            <a href="#products" className="hover:text-blue-600 transition">Products</a>
+            <a href="#wholesale" className="hover:text-blue-600 transition">Wholesale</a>
+            <a href="#contact" className="hover:text-blue-600 transition">Contact</a>
+          </nav>
+          <button
+            onClick={() => setShowCart(!showCart)}
+            className="bg-[#0f172a] text-white px-4 py-2 rounded-full font-semibold hover:bg-black transition shadow-md"
+          >
+            Cart ({cart.length})
+          </button>
+        </div>
       </header>
 
       {/* Hero */}
-      <section className="h-80 flex items-center justify-center bg-gradient-to-r from-purple-800 to-pink-600">
-        <h2 className="text-5xl font-bold text-center">Premium Sweets & Dairy</h2>
+      <section className="relative w-full h-[600px]">
+        <img src="/banner.jpg" alt="banner" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/20 flex items-center justify-center" />
       </section>
 
       {/* Products */}
-      <section id="products" className="p-8">
-        <h2 className="text-3xl font-bold text-center mb-6 text-pink-400">Our Products</h2>
+      <section id="products" className="p-8 bg-gray-50">
+        <h2 className="text-4xl text-center font-extrabold text-gray-900 mb-8">Our Products</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {products.map(p => (
-            <div key={p.id} className="bg-gray-900 rounded-xl p-4 text-center shadow-lg">
-              <Image src={p.image} alt={p.name} width={300} height={300} />
-              <h3 className="mt-3 font-semibold">{p.name}</h3>
-              <p className="text-pink-300">
-                ৳{p.price} <span className="text-sm text-gray-400">{p.unit}</span>
-              </p>
+            <div key={p.id} className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:scale-105 text-center">
+              <Image src={p.image} alt={p.name} width={300} height={300} className="rounded-xl" />
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">{p.name}</h3>
+              <p className="text-blue-600 font-medium mb-2">৳{p.price}</p>
 
               <select
+                value={quantities[p.id] || 1}
                 onChange={(e) => handleQuantityChange(p.id, e.target.value)}
-                className="mt-2 p-2 rounded bg-black text-white border border-pink-400"
+                className="mt-2 p-2 border border-gray-300 rounded-md w-full text-gray-900"
               >
                 <option value="0.5">500g</option>
-                <option value="1">1 kg</option>
-                <option value="2">2 kg</option>
+                <option value="1">1kg</option>
+                <option value="2">2kg</option>
+                <option value="3">3kg</option>
+                <option value="4">4kg</option>
+                <option value="5">5kg</option>
               </select>
 
               <button
                 onClick={() => addToCart(p)}
-                className="mt-2 bg-pink-500 px-4 py-2 rounded hover:bg-purple-600"
+                className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md font-semibold w-full hover:bg-blue-700 transition"
               >
-                Add to Cart
+                Add
               </button>
             </div>
           ))}
@@ -115,103 +178,169 @@ export default function HomePage() {
       </section>
 
       {/* Cart */}
-      {cart.length > 0 && (
-        <div className="fixed right-4 top-24 bg-gray-800 p-4 rounded-lg w-80 shadow-lg">
-          <h3 className="font-bold mb-2 text-pink-400">Cart</h3>
-          {cart.map(item => (
-            <div key={item.id} className="mb-2">
-              <p>{item.name}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <button
-                  onClick={() =>
-                    setCart(cart.map(i =>
-                      i.id === item.id && i.qty > 0.5
-                        ? { ...i, qty: i.qty - 0.5, total: (i.qty - 0.5) * i.price }
-                        : i
-                    ))
-                  }
-                  className="px-2 bg-purple-600 rounded"
-                >-</button>
-                <span>{item.qty} kg</span>
-                <button
-                  onClick={() =>
-                    setCart(cart.map(i =>
-                      i.id === item.id
-                        ? { ...i, qty: i.qty + 0.5, total: (i.qty + 0.5) * i.price }
-                        : i
-                    ))
-                  }
-                  className="px-2 bg-pink-600 rounded"
-                >+</button>
-              </div>
-              <p className="text-sm text-pink-400">৳{item.total}</p>
-            </div>
-          ))}
+      {showCart && (
+        <div className="fixed right-4 top-20 bg-white p-4 rounded-2xl w-80 shadow-2xl text-sm font-sans z-50">
+          <h3 className="text-gray-900 text-lg font-semibold mb-3">Your Cart</h3>
 
-          <p className="mt-2 font-bold">Total: ৳{total}</p>
+          {cart.length === 0 ? (
+            <p className="text-gray-500 text-sm">Your cart is empty.</p>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {cart.map(item => (
+                <div key={item.id} className="flex justify-between items-center border-b border-gray-200 pb-2">
+                  <div className="flex items-center gap-3">
+                    <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded"/>
+                    <div className="flex flex-col">
+                      <span className="text-gray-900 font-medium truncate">{item.name}</span>
+                      <span className="text-gray-500 text-xs">Qty: {item.qty} kg</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-gray-900 font-semibold">৳{item.total}</span>
+                    <button onClick={() => removeFromCart(item.id)} className="text-red-500 text-xs mt-1 hover:text-red-700">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
-          {/* Payment Options */}
-          <div className="mt-3 text-sm bg-black p-3 rounded border border-pink-400 space-y-2">
-            <p className="text-pink-400 font-semibold">Payment Options:</p>
-            <div className="bg-pink-900 p-2 rounded">
-              <p className="font-bold">bKash Payment</p>
-              <p>Number: +8801922318506</p>
-              <p className="text-xs text-gray-300">Send money and share screenshot on WhatsApp</p>
-            </div>
-            <div className="bg-purple-900 p-2 rounded">
-              <p className="font-bold">Bank Transfer</p>
-              <p>Bank: Brac Bank PLC</p>
-              <p>Account Name: Nur Mohammad Musa</p>
-              <p>Account No: 1073840710001</p>
-              <p className="text-xs text-gray-300">Transfer and send proof on WhatsApp</p>
-            </div>
+          <div className="mt-3 border-t border-gray-200 pt-3">
+            <p className="flex justify-between font-semibold text-gray-900 mb-3">
+              <span>Total:</span> <span>৳{total}</span>
+            </p>
+
+            {!showCheckoutForm && cart.length > 0 && (
+              <button
+                onClick={() => setShowCheckoutForm(true)}
+                className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+              >
+                Checkout
+              </button>
+            )}
+
+            {showCheckoutForm && (
+              <form className="mt-3 space-y-3 text-gray-900" onSubmit={handleOrderSubmit}>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  value={customerInfo.name}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+                <input
+                  type="text"
+                  name="contact"
+                  placeholder="Contact Number"
+                  value={customerInfo.contact}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={customerInfo.email}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+                <textarea
+                  name="address"
+                  placeholder="Address"
+                  value={customerInfo.address}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-green-600 text-white py-2 rounded-md font-semibold hover:bg-green-700 transition"
+                >
+                  Place Order
+                </button>
+              </form>
+            )}
           </div>
-
-          <a
-            href={generateWhatsAppLink()}
-            target="_blank"
-            className="block mt-3 bg-green-600 text-center py-2 rounded"
-          >
-            Send Order via WhatsApp
-          </a>
         </div>
       )}
 
-      {/* Wholesale */}
-      <section id="wholesale" className="bg-gradient-to-r from-purple-900 to-pink-700 p-8 text-center">
-        <h2 className="text-3xl font-bold">Wholesale Orders</h2>
-        <p className="mt-2">Contact us for bulk pricing.</p>
-        <a href="https://wa.me/8801922318506" className="mt-3 inline-block bg-black px-5 py-2 rounded">WhatsApp Us</a>
-      </section>
 
-      {/* Contact */}
-      <section id="contact" className="p-8 text-center">
-        <h2 className="text-3xl font-bold text-pink-400">Contact</h2>
-        <p>📞 +8801922318506</p>
-        <p>📧 piasislam678@gmail.com</p>
-        <p>📍 Khulna, Bangladesh</p>
-      </section>
+{/* Wholesale, Contact, Map Section */}
+<section className="flex flex-col md:flex-row gap-6 p-8 bg-gray-50">
+  {/* Wholesale */}
+  <div className="flex-1 bg-white p-10 text-center rounded-2xl shadow-lg hover:shadow-2xl transform transition hover:scale-105">
+    <h2 className="text-4xl font-extrabold mb-4 text-gray-900">Wholesale Orders</h2>
+    <p className="text-gray-700 mb-6">Contact us for bulk pricing.</p>
+    <a
+      href="https://wa.me/8801922318506"
+      className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition"
+    >
+      WhatsApp Us
+    </a>
+  </div>
 
-      {/* Map */}
-      <iframe
-        src="https://maps.google.com/maps?q=Khulna%20Bangladesh&t=&z=13&ie=UTF8&iwloc=&output=embed"
-        className="w-full h-64"
-      />
+  {/* Contact */}
+  <div className="flex-1 bg-white p-10 text-center rounded-2xl shadow-lg hover:shadow-2xl transform transition hover:scale-105">
+    <h2 className="text-4xl font-extrabold mb-4 text-gray-900">Contact</h2>
+    <p className="text-gray-700 mb-2">📞 +8801922318506</p>
+    <p className="text-gray-700 mb-2">📧 piasislam678@gmail.com</p>
+    <p className="text-gray-700 mb-6">📍 Khulna, Bangladesh</p>
+    <a
+      href="https://wa.me/8801922318506"
+      className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition"
+    >
+      WhatsApp Us
+    </a>
+  </div>
 
-      {/* Footer */}
-      <footer className="bg-black border-t border-pink-400 text-center p-4">
-        <p>© 2026 NSL Agro Firm</p>
-      </footer>
+  {/* Map */}
+  <div className="flex-1 bg-white p-10 text-center rounded-2xl shadow-lg hover:shadow-2xl transform transition hover:scale-105">
+    <h2 className="text-4xl font-extrabold mb-4 text-gray-900">Location</h2>
+    <iframe
+      src="https://www.google.com/maps?q=Khulna,Bangladesh&output=embed"
+      className="w-full h-64 rounded-lg border-0"
+    ></iframe>
+  </div>
+</section>
 
-      {/* Floating Buttons */}
-      <a href="https://wa.me/8801922318506" className="fixed bottom-6 left-6 bg-green-600 p-4 rounded-full">
-        <FaWhatsapp />
-      </a>
+{/* Footer */}
+<footer className="text-center p-6 border-t border-gray-200 bg-white text-gray-900 font-sans">
+  © 2026 NSL AGRO
+</footer>
 
-      <a href="https://www.facebook.com/profile.php?id=61575425881245" className="fixed bottom-6 right-6 bg-blue-600 p-4 rounded-full">
-        <FaFacebookF />
-      </a>
+{/* Floating Buttons */}
+<div>
+  {/* WhatsApp */}
+  <div className="group relative">
+    <a
+      href="https://wa.me/8801922318506"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-6 left-6 bg-[#25D366] p-4 rounded-full shadow-lg hover:scale-110 transition duration-300"
+    >
+      <FaWhatsapp className="text-white text-xl" />
+    </a>
+    <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+      WhatsApp Us
+    </span>
+  </div>
 
-    </main>
+  {/* Facebook */}
+  <div className="group relative">
+    <a
+      href="https://www.facebook.com/profile.php?id=61575425881245"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-6 right-6 bg-[#1877F2] p-4 rounded-full shadow-lg hover:scale-110 transition duration-300"
+    >
+      <FaFacebookF className="text-white text-xl" />
+    </a>
+    <span className="absolute right-14 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+      Visit Facebook
+    </span>
+  </div>
+</div>
+</main>
   );
 }

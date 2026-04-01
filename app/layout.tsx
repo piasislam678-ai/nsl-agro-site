@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NSL Agro Firm",
+ title: "NSL AGRO",
   description: "Premium dairy & Bengali sweets",
 };
 

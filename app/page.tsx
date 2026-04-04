@@ -181,8 +181,6 @@ const decreaseCartQty = (id: number) => {
           <nav className="space-x-4 hidden md:block">
             <a href="#" className="hover:text-blue-600 transition">Home</a>
             <a href="#products" className="hover:text-blue-600 transition">Products</a>
-            <a href="#wholesale" className="hover:text-blue-600 transition">Wholesale</a>
-            <a href="#contact" className="hover:text-blue-600 transition">Contact</a>
           </nav>
           <button
             onClick={() => setShowCart(!showCart)}

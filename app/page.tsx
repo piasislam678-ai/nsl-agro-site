@@ -44,19 +44,35 @@ export default function HomePage() {
     setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleOrderSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    console.log("Order submitted:", { customer: customerInfo, cart, total });
-    alert("Thank you! Your order has been submitted.");
+  const message = `
+🛒 New Order - NSL AGRO
 
-    // Reset state
-    setCart([]);
-    setShowCart(false);
-    setShowCheckoutForm(false);
-    setCustomerInfo({ name: "", contact: "", email: "", address: "" });
-  };
+Customer Info:
+Name: ${customerInfo.name}
+Phone: ${customerInfo.contact || customerInfo.contact}
+Email: ${customerInfo.email}
+Address: ${customerInfo.address}
+
+Order Details:
+${cart.map(item => `• ${item.name} - Qty: ${item.qty} - Price: ৳${item.total}`).join('\n')}
+
+Total: ৳${total}
+`;
+
+  const whatsappURL = `https://wa.me/8801922318506?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, "_blank");
+
+  alert("Redirecting to WhatsApp to complete your order...");
+
+  // Clear cart & form
+  setCart([]);
+  setShowCart(false);
+  setShowCheckoutForm(false);
+  setCustomerInfo({ name: "", contact: "", email: "", address: "" });
+};
 
   // Save cart in localStorage
   useEffect(() => {
@@ -105,16 +121,56 @@ export default function HomePage() {
 
   const removeFromCart = (id: number) => setCart(cart.filter(i => i.id !== id));
 
+  const increaseCartQty = (id: number) => {
+  setCart(
+    cart.map(item =>
+      item.id === id
+        ? {
+            ...item,
+            qty: item.qty + 1,
+            total: (item.qty + 1) * item.price,
+          }
+        : item
+    )
+  );
+};
+
+const decreaseCartQty = (id: number) => {
+  setCart(
+    cart
+      .map(item =>
+        item.id === id
+          ? {
+              ...item,
+              qty: item.qty - 1,
+              total: (item.qty - 1) * item.price,
+            }
+          : item
+      )
+      .filter(item => item.qty > 0)
+  );
+};
+
   const total = cart.reduce((sum, item) => sum + item.total, 0);
 
   const generateWhatsAppLink = () => {
-    let message = "🛒 Order from NSL AGRO:%0A%0A";
-    cart.forEach(item => {
-      message += `• ${item.name}%0AQty: ${item.qty} kg%0APrice: ৳${item.total}%0A%0A`;
-    });
-    message += `Total: ৳${total}`;
-    return `https://wa.me/8801922318506?text=${message}`;
-  };
+  let message = "🛒 *New Order - NSL AGRO*%0A%0A";
+
+  message += "*Customer Info*%0A";
+  message += `Name: ${customerInfo.name}%0A`;
+  message += `Phone: ${customerInfo.contact}%0A`;
+  message += `Email: ${customerInfo.email}%0A`;
+  message += `Address: ${customerInfo.address}%0A%0A`;
+
+  message += "*Order Details*%0A";
+  cart.forEach(item => {
+    message += `• ${item.name}%0AQty: ${item.qty} kg%0APrice: ৳${item.total}%0A%0A`;
+  });
+
+  message += `*Total: ৳${total}*`;
+
+  return `https://wa.me/8801922318506?text=${message}`;
+};
 
   return (
     <main className="bg-[#f8fafc] text-[#0f172a] font-sans">
@@ -139,7 +195,7 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="relative w-full h-[600px]">
-        <img src="/banner.jpg" alt="banner" className="w-full h-full object-cover" />
+        <img src="/banner.jpg" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/20 flex items-center justify-center" />
       </section>
 
@@ -192,7 +248,25 @@ export default function HomePage() {
                     <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded"/>
                     <div className="flex flex-col">
                       <span className="text-gray-900 font-medium truncate">{item.name}</span>
-                      <span className="text-gray-500 text-xs">Qty: {item.qty} kg</span>
+                      <div className="flex items-center gap-2 mt-1">
+  <button
+    onClick={() => decreaseCartQty(item.id)}
+    className="bg-gray-200 px-2 py-0.5 rounded text-sm font-bold hover:bg-gray-300"
+  >
+    -
+  </button>
+
+  <span className="text-gray-700 text-sm">
+    {item.qty} kg
+  </span>
+
+  <button
+    onClick={() => increaseCartQty(item.id)}
+    className="bg-gray-200 px-2 py-0.5 rounded text-sm font-bold hover:bg-gray-300"
+  >
+    +
+  </button>
+</div>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
@@ -265,7 +339,7 @@ export default function HomePage() {
         </div>
       )}
 
-
+      
 {/* Wholesale, Contact, Map Section */}
 <section className="flex flex-col md:flex-row gap-6 p-8 bg-gray-50">
   {/* Wholesale */}

@@ -13,15 +13,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
- title: "NSL AGRO",
-  description: "Premium dairy & Bengali sweets",
+  title: "NSL AGRO",
+  description:
+    "Pure Fresh Dairy & Sweets in Khulna. Order Milk, Ghee, Paneer & Sweets online.",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  openGraph: {
+    title: "NSL AGRO",
+    description: "Fresh Dairy & Sweets",
+    images: ["/banner.jpg"],
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html
       lang="en"
@@ -32,13 +41,15 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Premium dairy & Bengali sweets" />
 
-        {/* Google site verification */}
         <meta
           name="google-site-verification"
           content="dXTsdRdrEMV96uBSdLQ2MtmXAL4_rv6ltYrWrK3wMIQ"
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+
+      <body className="min-h-full flex flex-col">
+        {children}
+      </body>
     </html>
   );
 }

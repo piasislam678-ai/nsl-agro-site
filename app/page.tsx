@@ -59,7 +59,7 @@ export default function HomePage() {
 
 Customer Info:
 Name: ${customerInfo.name}
-Phone: ${customerInfo.contact || customerInfo.contact}
+Phone: ${customerInfo.contact}
 Email: ${customerInfo.email}
 Address: ${customerInfo.address}
 

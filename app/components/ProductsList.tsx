@@ -11,9 +11,16 @@ const products = [
   { name: "Sandesh", img: "/products/product8.jpg" },
   { name: "Rasgulla", img: "/products/product9.jpg" },
   { name: "Curd & Yogurt", img: "/products/product10.jpg" },
-  { name: "Paneer", img: "/products/product11.jpg" },
+  { name: "Paneer", img: "/products/product11-new.jpg" },
   { name: "Ghee", img: "/products/product12.jpg" },
-  { name: "Fresh Milk", img: "/products/product13.jpg" },
+  { name: "Fresh Milk", img: "/products/product13-new.jpg" },
+  { name: "Reshmi Jalebi", img: "/products/product14.jpg" },
+  { name: "Yogurt", img: "/products/product15.jpg" },
+  { name: "Shahi Jarda", img: "/products/product16.jpg" },
+  { name: "Sitavog", img: "/products/product17.jpg" },
+  { name: "Sana Polaw", img: "/products/product18.jpg" },
+  { name: "Kaju Katli", img: "/products/product19.jpg" },
+  { name: "Gulab Jamun", img: "/products/product20.jpg", },
 ];
 
 export default function ProductsList() {

@@ -12,17 +12,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export const metadata = {
+  metadataBase: new URL("https://nsl-agro-site.vercel.app"),
+
   title: "NSL AGRO",
-  description:
-    "Pure Fresh Dairy & Sweets in Khulna. Order Milk, Ghee, Paneer & Sweets online.",
-  icons: {
-    icon: "/favicon.ico",
-  },
+  description: "Pure Fresh Dairy & Sweets in Khulna",
+
   openGraph: {
     title: "NSL AGRO",
     description: "Fresh Dairy & Sweets",
-    images: ["/banner.jpg"],
+    url: "https://nsl-agro-site.vercel.app",
+    siteName: "NSL AGRO",
+    images: [
+      {
+        url: "https://nsl-agro-site.vercel.app/banner.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "NSL AGRO",
+    description: "Fresh Dairy & Sweets",
+    images: ["https://nsl-agro-site.vercel.app/banner.jpg"],
+  },
+
+  icons: {
+    icon: "/favicon.ico",
   },
 };
 

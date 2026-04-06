@@ -17,7 +17,7 @@ export const metadata = {
 
   title: "NSL AGRO | Premium Dairy & Sweets in Khulna",
   description:
-    "Order fresh milk, ghee, paneer and traditional sweets from NSL AGRO. Pure, hygienic and delivered in Khulna.",
+  "NSL AGRO is a dairy and sweets shop in Khulna. Buy fresh milk, ghee, paneer and sweets online in Bangladesh.",
 
   openGraph: {
     title: "NSL AGRO",

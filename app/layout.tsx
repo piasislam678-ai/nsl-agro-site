@@ -60,6 +60,7 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Premium dairy & Bengali sweets" />
+        <meta name="robots" content="index, follow" />
 
         <meta
           name="google-site-verification"

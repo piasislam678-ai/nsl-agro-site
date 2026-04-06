@@ -15,17 +15,18 @@ const geistMono = Geist_Mono({
 export const metadata = {
   metadataBase: new URL("https://nsl-agro-site.vercel.app"),
 
-  title: "NSL AGRO",
-  description: "Pure Fresh Dairy & Sweets in Khulna",
+  title: "NSL AGRO | Premium Dairy & Sweets in Khulna",
+  description:
+    "Order fresh milk, ghee, paneer and traditional sweets from NSL AGRO. Pure, hygienic and delivered in Khulna.",
 
   openGraph: {
     title: "NSL AGRO",
-    description: "Fresh Dairy & Sweets",
+    description: "Premium Dairy & Sweets in Khulna",
     url: "https://nsl-agro-site.vercel.app",
     siteName: "NSL AGRO",
     images: [
       {
-        url: "https://nsl-agro-site.vercel.app/banner.jpg",
+        url: "https://nsl-agro-site.vercel.app/banner-desktop.jpg", // ✅ USE THIS
         width: 1200,
         height: 630,
       },
@@ -36,8 +37,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "NSL AGRO",
-    description: "Fresh Dairy & Sweets",
-    images: ["https://nsl-agro-site.vercel.app/banner.jpg"],
+    description: "Fresh Dairy & Sweets in Khulna",
+    images: ["https://nsl-agro-site.vercel.app/banner-desktop.jpg"], // ✅ SAME HERE
   },
 
   icons: {

@@ -199,10 +199,47 @@ const decreaseCartQty = (id: number) => {
       </header>
 
       {/* Hero */}
-      <section className="relative w-full h-[600px]">
-        <img src="/banner.jpg" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/20 flex items-center justify-center" />
-      </section>
+      <section className="relative w-full h-[350px] md:h-[630px] overflow-hidden">
+
+  {/* Mobile Image */}
+  <img
+    src="/banner-mobile.jpg"
+    alt="NSL AGRO Mobile Banner"
+    className="w-full h-full object-cover md:hidden"
+  />
+
+  {/* Desktop Image */}
+  <img
+    src="/banner-desktop.jpg"
+    alt="NSL AGRO Desktop Banner"
+    className="w-full h-full object-cover hidden md:block"
+  />
+
+  {/* Premium dark gradient overlay */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+
+  {/* Center Text */}
+  <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6">
+
+    <h1 className="text-white text-3xl md:text-5xl lg:text-7xl font-semibold tracking-tight">
+      NSL AGRO
+    </h1>
+
+    <p className="mt-3 text-gray-200 text-sm md:text-lg font-light tracking-wide max-w-xl">
+      Premium Dairy & Sweets crafted with purity, tradition and quality
+    </p>
+
+    {/* Premium Button */}
+    <a
+      href="#products"
+      className="mt-6 px-6 py-2 rounded-full bg-white text-black text-sm md:text-base font-medium hover:bg-gray-200 transition duration-300"
+    >
+      Explore Products
+    </a>
+
+  </div>
+
+</section>
 
       {/* Products */}
       <section id="products" className="p-8 bg-gray-50">

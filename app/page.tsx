@@ -246,8 +246,16 @@ const decreaseCartQty = (id: number) => {
         <h2 className="text-4xl text-center font-extrabold text-gray-900 mb-8">Our Products</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {products.map(p => (
-            <div key={p.id} className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:scale-105 text-center">
-              <Image src={p.image} alt={p.name} width={300} height={300} className="rounded-xl" />
+            <div key={p.id} className="bg-white p-4 rounded-2xl shadow-md hover:shadow-xl transition duration-300 text-center">
+              <div className="w-full aspect-square overflow-hidden rounded-xl">
+  <Image
+    src={p.image}
+    alt={p.name}
+    width={300}
+    height={300}
+    className="w-full h-full object-cover hover:scale-105 transition duration-300"
+  />
+</div>
               <h3 className="mt-4 text-lg font-semibold text-gray-900">{p.name}</h3>
               <p className="text-blue-600 font-medium mb-2">৳{p.price}</p>
 

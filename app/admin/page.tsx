@@ -3,91 +3,150 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
+// ✅ Product Type (ONLY ONCE)
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+};
+
 export default function AdminPage() {
-  const [products, setProducts] = useState([]);
+  // ✅ State
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
     price: "",
     image: "",
   });
 
-  // Fetch products
+  // ✅ Fetch products
   const fetchProducts = async () => {
-    const { data } = await supabase.from("products").select("*");
-    setProducts(data || []);
+    setLoading(true);
+    const { data, error } = await supabase.from("products").select("*");
+
+    if (error) {
+      console.error("Fetch error:", error.message);
+    } else {
+      setProducts((data as Product[]) || []);
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  // Add product
+  // ✅ Add product
   const addProduct = async () => {
-    await supabase.from("products").insert([form]);
-    setForm({ name: "", price: "", image: "" });
-    fetchProducts();
+    if (!form.name || !form.price || !form.image) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const { error } = await supabase.from("products").insert([
+      {
+        name: form.name,
+        price: Number(form.price),
+        image: form.image,
+      },
+    ]);
+
+    if (error) {
+      alert("Error adding product");
+      console.error(error.message);
+    } else {
+      setForm({ name: "", price: "", image: "" });
+      fetchProducts();
+    }
   };
 
-  // Delete product
-  const deleteProduct = async (id) => {
-    await supabase.from("products").delete().eq("id", id);
-    fetchProducts();
+  // ✅ Delete product
+  const deleteProduct = async (id: number) => {
+    const { error } = await supabase.from("products").delete().eq("id", id);
+
+    if (error) {
+      alert("Error deleting product");
+      console.error(error.message);
+    } else {
+      fetchProducts();
+    }
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Admin Panel</h1>
+    <div className="p-8 bg-gray-50 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center">Admin Panel</h1>
 
       {/* ADD PRODUCT */}
-      <div className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="font-semibold mb-2">Add Product</h2>
+      <div className="bg-white p-6 rounded-2xl shadow-lg mb-8 max-w-xl mx-auto">
+        <h2 className="font-semibold mb-4 text-lg">Add Product</h2>
 
         <input
-          placeholder="Name"
+          placeholder="Product Name"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-full mb-3 rounded"
         />
 
         <input
           placeholder="Price"
+          type="number"
           value={form.price}
           onChange={(e) => setForm({ ...form, price: e.target.value })}
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-full mb-3 rounded"
         />
 
         <input
           placeholder="Image URL"
           value={form.image}
           onChange={(e) => setForm({ ...form, image: e.target.value })}
-          className="border p-2 w-full mb-2"
+          className="border p-2 w-full mb-3 rounded"
         />
 
         <button
           onClick={addProduct}
-          className="bg-black text-white px-4 py-2 rounded"
+          className="bg-black hover:bg-gray-800 transition text-white px-4 py-2 rounded w-full"
         >
           Add Product
         </button>
       </div>
 
       {/* PRODUCT LIST */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {products.map((p) => (
-          <div key={p.id} className="bg-white p-3 rounded shadow">
-            <img src={p.image} className="w-full h-32 object-cover rounded" />
-            <h3 className="font-bold mt-2">{p.name}</h3>
-            <p>৳{p.price}</p>
-
-            <button
-              onClick={() => deleteProduct(p.id)}
-              className="mt-2 bg-red-500 text-white px-2 py-1 rounded"
+      {loading ? (
+        <p className="text-center">Loading...</p>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {products.map((p) => (
+            <div
+              key={p.id}
+              className="bg-white p-4 rounded-2xl shadow hover:shadow-xl transition"
             >
-              Delete
-            </button>
-          </div>
-        ))}
-      </div>
+              <div className="overflow-hidden rounded-xl">
+                <img
+                  src={p.image}
+                  className="w-full h-40 object-cover transition-transform duration-300 hover:scale-110"
+                />
+              </div>
+
+              <h3 className="font-semibold mt-3 text-gray-900">
+                {p.name}
+              </h3>
+
+              <p className="text-blue-600 font-medium">৳{p.price}</p>
+
+              <button
+                onClick={() => deleteProduct(p.id)}
+                className="mt-3 bg-red-500 hover:bg-red-600 transition text-white px-3 py-1 rounded w-full"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

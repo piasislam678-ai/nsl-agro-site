@@ -17,10 +17,11 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    name: "",
-    price: "",
-    image: "",
-  });
+  name: "",
+  price: "",
+});
+
+const [imageFile, setImageFile] = useState<File | null>(null);
 
   // ✅ Fetch products
   const fetchProducts = async () => {
@@ -42,39 +43,75 @@ export default function AdminPage() {
 
   // ✅ Add product
   const addProduct = async () => {
-    if (!form.name || !form.price || !form.image) {
-      alert("Please fill all fields");
-      return;
-    }
+  if (!form.name || !form.price || !imageFile) {
+    alert("Please fill all fields");
+    return;
+  }
 
-    const { error } = await supabase.from("products").insert([
-      {
-        name: form.name,
-        price: Number(form.price),
-        image: form.image,
-      },
-    ]);
+  // Upload image
+  const fileName = Date.now() + "-" + imageFile.name;
 
-    if (error) {
-      alert("Error adding product");
-      console.error(error.message);
-    } else {
-      setForm({ name: "", price: "", image: "" });
-      fetchProducts();
-    }
-  };
+  const { error: uploadError } = await supabase.storage
+    .from("products")
+    .upload(fileName, imageFile);
+
+  if (uploadError) {
+    alert("Image upload failed");
+    return;
+  }
+
+  // Get public URL
+  const { data } = supabase.storage
+    .from("products")
+    .getPublicUrl(fileName);
+
+  const imageUrl = data.publicUrl;
+
+  // Save product
+  const { error } = await supabase.from("products").insert([
+    {
+      name: form.name,
+      price: Number(form.price),
+      image: imageUrl,
+    },
+  ]);
+
+  if (error) {
+    alert("Error adding product");
+    console.error(error.message);
+  } else {
+    setForm({ name: "", price: "" });
+    setImageFile(null);
+    fetchProducts();
+  }
+};
 
   // ✅ Delete product
-  const deleteProduct = async (id: number) => {
-    const { error } = await supabase.from("products").delete().eq("id", id);
+const deleteProduct = async (id: number) => {
+  const { error } = await supabase.from("products").delete().eq("id", id);
 
-    if (error) {
-      alert("Error deleting product");
-      console.error(error.message);
-    } else {
-      fetchProducts();
-    }
-  };
+  if (error) {
+    alert("Error deleting product");
+    console.error(error.message);
+  } else {
+    fetchProducts();
+  }
+};
+
+// ✅ UPDATE PRODUCT (OUTSIDE, SEPARATE)
+const updateProduct = async (id: number, name: string, price: number) => {
+  const { error } = await supabase
+    .from("products")
+    .update({ name, price })
+    .eq("id", id);
+
+  if (error) {
+    alert("Update failed");
+    console.error(error.message);
+  } else {
+    fetchProducts();
+  }
+};
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -99,12 +136,24 @@ export default function AdminPage() {
           className="border p-2 w-full mb-3 rounded"
         />
 
-        <input
-          placeholder="Image URL"
-          value={form.image}
-          onChange={(e) => setForm({ ...form, image: e.target.value })}
-          className="border p-2 w-full mb-3 rounded"
-        />
+        <div
+  onClick={() => document.getElementById("fileInput")?.click()}
+  onDrop={(e) => {
+    e.preventDefault();
+    setImageFile(e.dataTransfer.files[0]);
+  }}
+  onDragOver={(e) => e.preventDefault()}
+  className="border-2 border-dashed p-6 text-center mb-3 cursor-pointer rounded-lg"
+>
+  Drag & Drop OR Click to Upload
+</div>
+
+<input
+  id="fileInput"
+  type="file"
+  hidden
+  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+/>
 
         <button
           onClick={addProduct}
@@ -136,7 +185,19 @@ export default function AdminPage() {
               </h3>
 
               <p className="text-blue-600 font-medium">৳{p.price}</p>
+  <button
+  onClick={() => {
+    const newName = prompt("Enter new name", p.name);
+    const newPrice = prompt("Enter new price", p.price.toString());
 
+    if (newName && newPrice) {
+      updateProduct(p.id, newName, Number(newPrice));
+    }
+  }}
+  className="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded w-full"
+>
+  Edit
+</button>
               <button
                 onClick={() => deleteProduct(p.id)}
                 className="mt-3 bg-red-500 hover:bg-red-600 transition text-white px-3 py-1 rounded w-full"

@@ -21,10 +21,15 @@ const products = [
   { id: 14, name: "Reshmi Jalebi", image: "/products/product14.jpg", price: 250, unit: "per kg" },
   { id: 15, name: "Yogurt", image: "/products/product15.jpg", price: 200, unit: "per kg" },
   { id: 16, name: "Shahi Jarda", image: "/products/product16.jpg", price: 410, unit: "per kg" },
-  { id: 17, name: "Sitavog", image: "/products/product17.jpg", price: 400, unit: "per kg" },
+  { id: 17, name: "Shitavog", image: "/products/product17.jpg", price: 400, unit: "per kg" },
   { id: 18, name: "Sana Polaw", image: "/products/product18.jpg", price: 450, unit: "per kg" },
   { id: 19, name: "Kaju Katli", image: "/products/product19.jpg", price: 420, unit: "per kg" },
   { id: 20, name: "Gulab Jamun", image: "/products/product20.jpg", price: 350, unit: "per kg" },
+  { id: 21, name: "Kher Kadam", image: "/products/product21-new.jpg", price: 450, unit: "per kg" },
+  { id: 22, name: "Kaca Golla", image: "/products/product22-new.jpg", price: 650, unit: "per kg" },
+  { id: 23, name: "Shahi Rabri", image: "/products/product23-new.jpg", price: 400, unit: "per kg" },
+  { id: 24, name: "Raj Bhog", image: "/products/product24.jpg", price: 650, unit: "per kg" },
+  { id: 25, name: "Gajar Halwa", image: "/products/product25.jpg", price: 400, unit: "per kg" },
 ];
 
 export default function HomePage() {

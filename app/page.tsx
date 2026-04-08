@@ -30,6 +30,10 @@ const products = [
   { id: 23, name: "Shahi Rabri", image: "/products/product23-new.jpg", price: 400, unit: "per kg" },
   { id: 24, name: "Raj Bhog", image: "/products/product24.jpg", price: 650, unit: "per kg" },
   { id: 25, name: "Gajar Halwa", image: "/products/product25.jpg", price: 400, unit: "per kg" },
+  { id: 26, name: "Imarti", image: "/products/product26.jpg", price: 300, unit: "per kg" },
+  { id: 27, name: "Malai Chom Chom", image: "/products/product27.jpg", price: 450, unit: "per kg" },
+  { id: 28, name: "Ilish Sondesh", image: "/products/product28.jpg", price: 500, unit: "per kg" },
+
 ];
 
 export default function HomePage() {
